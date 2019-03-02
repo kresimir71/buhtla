@@ -33,7 +33,7 @@ Markdown export commands
     
      (goto-line 1)
      (replace-regexp "^[/][*]C$" "")
-     (replace-regexp "^[*][/]C$" "")
+     (replace-regexp "^C[*][/]$" "")
      (save-buffer)
      (org-md-export-to-markdown)
      (kill-buffer)
@@ -224,5 +224,3 @@ THE FIRST ONE IS NOT RECOGNISED, ONLY THE FIRST ONE!! NEED NEW VERSION SWI PROLO
                                     alt[tok tok_7,next_1__0seq_2__0seq]]]
     
     */
-
-C\*/
