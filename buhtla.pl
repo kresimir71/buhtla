@@ -78,6 +78,8 @@ C*/
 /*C
 #+END_SRC
 
+* Processing the grammar
+
 #+BEGIN_EXAMPLE
 New rules will be created during the process of rewriting.
 Created rules will have sequence numbers which will also be easy to guess for the enduser.

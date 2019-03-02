@@ -4,6 +4,7 @@
 <ul>
 <li><a href="#sec-1">1. Introduction</a></li>
 <li><a href="#sec-2">2. Define operators</a></li>
+<li><a href="#sec-3">3. Processing the grammar</a></li>
 </ul>
 </div>
 </div>
@@ -68,6 +69,8 @@ THE FIRST ONE IS NOT RECOGNISED, ONLY THE FIRST ONE!! NEED NEW VERSION SWI PROLO
     :- op(50, xf, '+').
     :- op(50, xf, '*').
     :- op(50, xf, ? ).
+
+# Processing the grammar<a id="sec-3" name="sec-3"></a>
 
     New rules will be created during the process of rewriting.
     Created rules will have sequence numbers which will also be easy to guess for the enduser.
