@@ -26,6 +26,7 @@ Markdown export commands
 
  (goto-line 1)
  (replace-regexp "^[/][*]C$" "")
+ (goto-line 1)
  (replace-regexp "^C[*][/]$" "")
  (save-buffer)
  (org-md-export-to-markdown)
