@@ -229,7 +229,7 @@ simplifyGrammar( gram [ rule next :: [ alt [ [[tok tok_7]* ,tok tok_six]* ] ] ],
 gram[rule next::[alt[next_1__0seq],alt[]],rule next_1__0seq::[alt[next_1__0seq_1__0seq,tok tok_six],alt[tok tok_six],alt[next_1__0seq,next_1__0seq_2__0seq,tok tok_six],alt[next_1__0seq,tok tok_six]],rule next_1__0seq_1__0seq::[alt[tok tok_7],alt[next_1__0seq_1__0seq,tok tok_7]],rule next_1__0seq_2__0seq::[alt[tok tok_7],alt[next_1__0seq_2__0seq,tok tok_7]]]
 S = gram[rule next::[alt[next_1__0seq], alt[]], rule next_1__0seq::[alt[next_1__0seq_1__0seq, tok...], alt[tok...], alt[...|...], alt...], rule next_1__0seq_1__0seq::[alt[tok...], alt[...|...]], rule next_1__0seq_2__0seq::[alt[...], alt...]].
 
-#+BEGIN_END
+#+END_SRC
 
 #+BEGIN_SRC emacs-lisp
 
@@ -240,7 +240,7 @@ gram[rule root::[alt[nont next,root_1__0seq,root_1__1seq,tok tok_three,tok tok_c
 GR = gram[rule root::[alt[nont next, [...|...]*, + ...|...], alt[[...|...]*, tok...]], rule next::[alt[[...]*, ... ?]]],
 S = gram[rule root::[alt[nont next, root_1__0seq, root_1__1seq|...], alt[nont next, root_3__1seq|...], alt[nont...|...], alt[...|...], alt...|...], rule root_1__0seq::[alt[tok tok_one, tok...], alt[root_1__0seq|...]], rule root_1__1seq::[alt[tok...|...], alt[...|...]], rule root_2__1seq::[alt[...], alt...], rule root_3__1seq::[alt...|...], rule root_4__1seq::[...|...], rule... :: ..., rule...|...].
 
-#+BEGIN_END
+#+END_SRC
 
 * Thinking about far future: nested constructs
 

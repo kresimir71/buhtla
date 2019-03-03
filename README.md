@@ -210,28 +210,20 @@ Global variables in Prolog:
 
 ## An example<a id="sec-4-1" name="sec-4-1"></a>
 
-\#+BEGIN<sub>SRC</sub> emacs-lisp
+    [buhtla].
+    true.
+    
+    simplifyGrammar( gram [ rule next :: [ alt [ [[tok tok_7]* ,tok tok_six]* ] ] ], S), print(S).
+    
+    gram[rule next::[alt[next_1__0seq],alt[]],rule next_1__0seq::[alt[next_1__0seq_1__0seq,tok tok_six],alt[tok tok_six],alt[next_1__0seq,next_1__0seq_2__0seq,tok tok_six],alt[next_1__0seq,tok tok_six]],rule next_1__0seq_1__0seq::[alt[tok tok_7],alt[next_1__0seq_1__0seq,tok tok_7]],rule next_1__0seq_2__0seq::[alt[tok tok_7],alt[next_1__0seq_2__0seq,tok tok_7]]]
+    S = gram[rule next::[alt[next_1__0seq], alt[]], rule next_1__0seq::[alt[next_1__0seq_1__0seq, tok...], alt[tok...], alt[...|...], alt...], rule next_1__0seq_1__0seq::[alt[tok...], alt[...|...]], rule next_1__0seq_2__0seq::[alt[...], alt...]].
 
-[buhtla].
-true.
-
-simplifyGrammar( gram [ rule next :: [ alt [ [[tok tok<sub>7]</sub>\* ,tok tok<sub>six]</sub>\* ] ] ], S), print(S).
-
-gram[rule next::[alt[next<sub>1</sub>\_<sub>0seq]</sub>,alt[]],rule next<sub>1</sub>\_<sub>0seq</sub>::[alt[next<sub>1</sub>\_<sub>0seq</sub><sub>1</sub>\_<sub>0seq</sub>,tok tok<sub>six]</sub>,alt[tok tok<sub>six]</sub>,alt[next<sub>1</sub>\_<sub>0seq</sub>,next<sub>1</sub>\_<sub>0seq</sub><sub>2</sub>\_<sub>0seq</sub>,tok tok<sub>six]</sub>,alt[next<sub>1</sub>\_<sub>0seq</sub>,tok tok<sub>six]]</sub>,rule next<sub>1</sub>\_<sub>0seq</sub><sub>1</sub>\_<sub>0seq</sub>::[alt[tok tok<sub>7]</sub>,alt[next<sub>1</sub>\_<sub>0seq</sub><sub>1</sub>\_<sub>0seq</sub>,tok tok<sub>7]]</sub>,rule next<sub>1</sub>\_<sub>0seq</sub><sub>2</sub>\_<sub>0seq</sub>::[alt[tok tok<sub>7]</sub>,alt[next<sub>1</sub>\_<sub>0seq</sub><sub>2</sub>\_<sub>0seq</sub>,tok tok<sub>7]]]</sub>
-S = gram[rule next::[alt[next<sub>1</sub>\_<sub>0seq]</sub>, alt[]], rule next<sub>1</sub>\_<sub>0seq</sub>::[alt[next<sub>1</sub>\_<sub>0seq</sub><sub>1</sub>\_<sub>0seq</sub>, tok&#x2026;], alt[tok&#x2026;], alt[&#x2026;|&#x2026;], alt&#x2026;], rule next<sub>1</sub>\_<sub>0seq</sub><sub>1</sub>\_<sub>0seq</sub>::[alt[tok&#x2026;], alt[&#x2026;|&#x2026;]], rule next<sub>1</sub>\_<sub>0seq</sub><sub>2</sub>\_<sub>0seq</sub>::[alt[&#x2026;], alt&#x2026;]].
-
-\#+BEGIN<sub>END</sub>
-
-\#+BEGIN<sub>SRC</sub> emacs-lisp
-
-[buhtla].
-true.
-get<sub>grammar</sub>(1,GR),simplifyGrammar( GR, S), print(S).
-gram[rule root::[alt[nont next,root<sub>1</sub>\_<sub>0seq</sub>,root<sub>1</sub>\_<sub>1seq</sub>,tok tok<sub>three</sub>,tok tok<sub>comma</sub>,root<sub>2</sub>\_<sub>1seq</sub>,tok tok<sub>seven</sub>,act'{$1=\\'123\\';}'],alt[nont next,root<sub>3</sub>\_<sub>1seq</sub>,tok tok<sub>three</sub>,tok tok<sub>comma</sub>,root<sub>4</sub>\_<sub>1seq</sub>,tok tok<sub>seven</sub>,act'{$1=\\'123\\';}'],alt[nont next,root<sub>3</sub>\_<sub>1seq</sub>,root<sub>5</sub>\_<sub>1seq</sub>,tok tok<sub>seven</sub>,act'{$1=\\'123\\';}'],alt[nont next,root<sub>1</sub>\_<sub>0seq</sub>,root<sub>1</sub>\_<sub>1seq</sub>,root<sub>6</sub>\_<sub>1seq</sub>,tok tok<sub>seven</sub>,act'{$1=\\'123\\';}'],alt[root<sub>2</sub>\_<sub>0seq</sub>,tok tok<sub>eight]</sub>,alt[tok tok<sub>eight]]</sub>,rule root<sub>1</sub>\_<sub>0seq</sub>::[alt[tok tok<sub>one</sub>,tok tok<sub>comma]</sub>,alt[root<sub>1</sub>\_<sub>0seq</sub>,tok tok<sub>one</sub>,tok tok<sub>comma]]</sub>,rule root<sub>1</sub>\_<sub>1seq</sub>::[alt[tok tok<sub>two</sub>,tok tok<sub>comma]</sub>,alt[root<sub>1</sub>\_<sub>1seq</sub>,tok tok<sub>two</sub>,tok tok<sub>comma]]</sub>,rule root<sub>2</sub>\_<sub>1seq</sub>::[alt[tok tok<sub>four]</sub>,alt[root<sub>2</sub>\_<sub>1seq</sub>,tok tok<sub>four]]</sub>,rule root<sub>3</sub>\_<sub>1seq</sub>::[alt[tok tok<sub>two</sub>,tok tok<sub>comma]</sub>,alt[root<sub>3</sub>\_<sub>1seq</sub>,tok tok<sub>two</sub>,tok tok<sub>comma]]</sub>,rule root<sub>4</sub>\_<sub>1seq</sub>::[alt[tok tok<sub>four]</sub>,alt[root<sub>4</sub>\_<sub>1seq</sub>,tok tok<sub>four]]</sub>,rule root<sub>5</sub>\_<sub>1seq</sub>::[alt[tok tok<sub>four]</sub>,alt[root<sub>5</sub>\_<sub>1seq</sub>,tok tok<sub>four]]</sub>,rule root<sub>6</sub>\_<sub>1seq</sub>::[alt[tok tok<sub>four]</sub>,alt[root<sub>6</sub>\_<sub>1seq</sub>,tok tok<sub>four]]</sub>,rule root<sub>2</sub>\_<sub>0seq</sub>::[alt[tok tok<sub>eight</sub>,tok tok<sub>comma]</sub>,alt[root<sub>2</sub>\_<sub>0seq</sub>,tok tok<sub>eight</sub>,tok tok<sub>comma]]</sub>,rule next::[alt[next<sub>1</sub>\_<sub>0seq</sub>,tok tok<sub>six]</sub>,alt[tok tok<sub>six]</sub>,alt[],alt[next<sub>1</sub>\_<sub>0seq]]</sub>,rule next<sub>1</sub>\_<sub>0seq</sub>::[alt[tok tok<sub>five]</sub>,alt[next<sub>1</sub>\_<sub>0seq</sub>,tok tok<sub>five]]]</sub>
-GR = gram[rule root::[alt[nont next, [&#x2026;|&#x2026;]\*, + &#x2026;|&#x2026;], alt[[&#x2026;|&#x2026;]\*, tok&#x2026;]], rule next::[alt[[&#x2026;]\*, &#x2026; ?]]],
-S = gram[rule root::[alt[nont next, root<sub>1</sub>\_<sub>0seq</sub>, root<sub>1</sub>\_<sub>1seq|</sub>&#x2026;], alt[nont next, root<sub>3</sub>\_<sub>1seq|</sub>&#x2026;], alt[nont&#x2026;|&#x2026;], alt[&#x2026;|&#x2026;], alt&#x2026;|&#x2026;], rule root<sub>1</sub>\_<sub>0seq</sub>::[alt[tok tok<sub>one</sub>, tok&#x2026;], alt[root<sub>1</sub>\_<sub>0seq|</sub>&#x2026;]], rule root<sub>1</sub>\_<sub>1seq</sub>::[alt[tok&#x2026;|&#x2026;], alt[&#x2026;|&#x2026;]], rule root<sub>2</sub>\_<sub>1seq</sub>::[alt[&#x2026;], alt&#x2026;], rule root<sub>3</sub>\_<sub>1seq</sub>::[alt&#x2026;|&#x2026;], rule root<sub>4</sub>\_<sub>1seq</sub>::[&#x2026;|&#x2026;], rule&#x2026; :: &#x2026;, rule&#x2026;|&#x2026;].
-
-\#+BEGIN<sub>END</sub>
+    [buhtla].
+    true.
+    get_grammar(1,GR),simplifyGrammar( GR, S), print(S).
+    gram[rule root::[alt[nont next,root_1__0seq,root_1__1seq,tok tok_three,tok tok_comma,root_2__1seq,tok tok_seven,act'{$1=\'123\';}'],alt[nont next,root_3__1seq,tok tok_three,tok tok_comma,root_4__1seq,tok tok_seven,act'{$1=\'123\';}'],alt[nont next,root_3__1seq,root_5__1seq,tok tok_seven,act'{$1=\'123\';}'],alt[nont next,root_1__0seq,root_1__1seq,root_6__1seq,tok tok_seven,act'{$1=\'123\';}'],alt[root_2__0seq,tok tok_eight],alt[tok tok_eight]],rule root_1__0seq::[alt[tok tok_one,tok tok_comma],alt[root_1__0seq,tok tok_one,tok tok_comma]],rule root_1__1seq::[alt[tok tok_two,tok tok_comma],alt[root_1__1seq,tok tok_two,tok tok_comma]],rule root_2__1seq::[alt[tok tok_four],alt[root_2__1seq,tok tok_four]],rule root_3__1seq::[alt[tok tok_two,tok tok_comma],alt[root_3__1seq,tok tok_two,tok tok_comma]],rule root_4__1seq::[alt[tok tok_four],alt[root_4__1seq,tok tok_four]],rule root_5__1seq::[alt[tok tok_four],alt[root_5__1seq,tok tok_four]],rule root_6__1seq::[alt[tok tok_four],alt[root_6__1seq,tok tok_four]],rule root_2__0seq::[alt[tok tok_eight,tok tok_comma],alt[root_2__0seq,tok tok_eight,tok tok_comma]],rule next::[alt[next_1__0seq,tok tok_six],alt[tok tok_six],alt[],alt[next_1__0seq]],rule next_1__0seq::[alt[tok tok_five],alt[next_1__0seq,tok tok_five]]]
+    GR = gram[rule root::[alt[nont next, [...|...]*, + ...|...], alt[[...|...]*, tok...]], rule next::[alt[[...]*, ... ?]]],
+    S = gram[rule root::[alt[nont next, root_1__0seq, root_1__1seq|...], alt[nont next, root_3__1seq|...], alt[nont...|...], alt[...|...], alt...|...], rule root_1__0seq::[alt[tok tok_one, tok...], alt[root_1__0seq|...]], rule root_1__1seq::[alt[tok...|...], alt[...|...]], rule root_2__1seq::[alt[...], alt...], rule root_3__1seq::[alt...|...], rule root_4__1seq::[...|...], rule... :: ..., rule...|...].
 
 # Thinking about far future: nested constructs<a id="sec-5" name="sec-5"></a>
 
