@@ -40,8 +40,11 @@ C*/
 * Define operators
 
 Have a look at the following documents about defining operators
+
 http://www.swi-prolog.org/pldoc/doc_for?object=module/2
+
 http://www.swi-prolog.org/pldoc/man?predicate=op/3
+
 http://www.swi-prolog.org/pldoc/man?section=operators
 
 C*/
@@ -85,14 +88,15 @@ New rules will be created during the process of rewriting.
 Created rules will have sequence numbers which will also be easy to guess for the enduser.
 
 new rules derived from 'old_rule' will be named old_rule_123__1seq (for +) or old_rule_123__0seq (for *)
-(Thus it is needed to prevent input rule names ending in __0seq or __1seq, so that they do not colide with the new created rules.)
+(Thus it is needed to prevent input rule names ending in __0seq or __1seq, so that they do not colide with the new created rules. (todo) )
 #+END_EXAMPLE
+
+Global variables in Prolog:
 
 https://stackoverflow.com/questions/11364634/count-the-number-of-calls-of-a-clause
 
 #+BEGIN_SRC emacs-lisp
 C*/
-
 
 nb_inc(Key):-
   nb_getval(Key, Old),
@@ -104,24 +108,27 @@ nb_inc(Key):-
 get_grammar(1,G) :-
 G=gram [
 
-/* rule is a list of alternatives */
+ /* rule is a list of alternatives */
 
-rule root :: [ 
+ rule root :: [ 
                /* alternative is a list of terminal and nonterminal symbols and semantic actions, where * means none or more, + means one or more, and ? means none or one */
                alt [ nont next, [tok tok_one,  tok tok_comma]*,  [tok tok_two, tok tok_comma]+ , [tok tok_three, tok tok_comma]? ,[tok tok_four]+, tok tok_seven, act '{$1=\'123\';}' ],
 	       alt [ [ tok tok_eight, tok tok_comma]*, tok tok_eight]
 	     ],
-rule next :: [ alt [ [tok tok_five] * , [tok tok_six] ?] ]
+ rule next :: [ alt [ [tok tok_five] * , [tok tok_six] ?] ]
 ].
 
 /* alternativeIsSimple when there are no *,+,? in it */
 /*
 Uses 'contains_term' from:
+
 http://www.swi-prolog.org/pldoc/doc/_SWI_/library/occurs.pl
+
 */
+
 alternativeIsSimple(alt A) :- \+ contains_term( _ +, A), \+ contains_term( _ *, A), \+ contains_term( _ ?, A).
 
-/* given a grammar, the rules are processed to get a resulting grammar that containes only rules with simple alternatives. */
+/* Given a grammar, the rules are processed to get a resulting grammar that containes only rules with simple alternatives. */
 
 simplifyGrammar(gram [], gram []).
 
@@ -133,7 +140,7 @@ simplifyGrammar(gram [rule N :: R| RestG], gram SimpleG) :-
         ,simplifyGrammar(gram AllRestRules,gram SimpleAllRestG)
         ,append( [ rule N :: SimpleR], SimpleAllRestG, SimpleG).
 
-/* given a rule its alternatives are simplified. The rule can get additional alternatives, but also new additional rules can be created */
+/* Given a rule its alternatives are simplified. The rule can get additional alternatives, but also new additional rules can be created */
 /* call like
   simplifyRule( rule N :: R, rule N :: S, More)
   The input 'rule N :: R' gives the simple output 'rule N :: S' and a list of additional rules More.
@@ -156,7 +163,7 @@ simplifyRule( rule N :: [alt A | RestR], rule _ :: [alt SimplifiedAlternative |S
         , append(AdditionalRules1, AdditionalRules2, AdditionalRules)
         .
 
-/* given an alternative any occurance of ? is simplified by replacing the alternative by two new alternatives of the same rule. The original alternative is removed.
+/* Given an alternative any occurance of ? is simplified by replacing the alternative by two new alternatives of the same rule. The original alternative is removed.
 Any occurance of * is simplified by replacing the alternative by two new alternatives of the same rule and adding two new rules. The original alternative is removed.
 Any occurance of + is simplified by replacing the alternative by a new alternative of the same rule and adding two new rules. The original alternative is removed.
 The rules added in * and + cases are of the same structure to each other, i.e. the same trick works the for both.
@@ -208,9 +215,39 @@ simplifyAlternative(ProcessedPart,alt [ T | RestA],N , [T|SimplifiedAlternative]
 /*C
 #+END_SRC
 
+* Example usage
+
+** An example
+
+#+BEGIN_SRC emacs-lisp
+
+[buhtla].
+true.
+
+simplifyGrammar( gram [ rule next :: [ alt [ [[tok tok_7]* ,tok tok_six]* ] ] ], S), print(S).
+
+gram[rule next::[alt[next_1__0seq],alt[]],rule next_1__0seq::[alt[next_1__0seq_1__0seq,tok tok_six],alt[tok tok_six],alt[next_1__0seq,next_1__0seq_2__0seq,tok tok_six],alt[next_1__0seq,tok tok_six]],rule next_1__0seq_1__0seq::[alt[tok tok_7],alt[next_1__0seq_1__0seq,tok tok_7]],rule next_1__0seq_2__0seq::[alt[tok tok_7],alt[next_1__0seq_2__0seq,tok tok_7]]]
+S = gram[rule next::[alt[next_1__0seq], alt[]], rule next_1__0seq::[alt[next_1__0seq_1__0seq, tok...], alt[tok...], alt[...|...], alt...], rule next_1__0seq_1__0seq::[alt[tok...], alt[...|...]], rule next_1__0seq_2__0seq::[alt[...], alt...]].
+
+#+BEGIN_END
+
+#+BEGIN_SRC emacs-lisp
+
+[buhtla].
+true.
+get_grammar(1,GR),simplifyGrammar( GR, S), print(S).
+gram[rule root::[alt[nont next,root_1__0seq,root_1__1seq,tok tok_three,tok tok_comma,root_2__1seq,tok tok_seven,act'{$1=\'123\';}'],alt[nont next,root_3__1seq,tok tok_three,tok tok_comma,root_4__1seq,tok tok_seven,act'{$1=\'123\';}'],alt[nont next,root_3__1seq,root_5__1seq,tok tok_seven,act'{$1=\'123\';}'],alt[nont next,root_1__0seq,root_1__1seq,root_6__1seq,tok tok_seven,act'{$1=\'123\';}'],alt[root_2__0seq,tok tok_eight],alt[tok tok_eight]],rule root_1__0seq::[alt[tok tok_one,tok tok_comma],alt[root_1__0seq,tok tok_one,tok tok_comma]],rule root_1__1seq::[alt[tok tok_two,tok tok_comma],alt[root_1__1seq,tok tok_two,tok tok_comma]],rule root_2__1seq::[alt[tok tok_four],alt[root_2__1seq,tok tok_four]],rule root_3__1seq::[alt[tok tok_two,tok tok_comma],alt[root_3__1seq,tok tok_two,tok tok_comma]],rule root_4__1seq::[alt[tok tok_four],alt[root_4__1seq,tok tok_four]],rule root_5__1seq::[alt[tok tok_four],alt[root_5__1seq,tok tok_four]],rule root_6__1seq::[alt[tok tok_four],alt[root_6__1seq,tok tok_four]],rule root_2__0seq::[alt[tok tok_eight,tok tok_comma],alt[root_2__0seq,tok tok_eight,tok tok_comma]],rule next::[alt[next_1__0seq,tok tok_six],alt[tok tok_six],alt[],alt[next_1__0seq]],rule next_1__0seq::[alt[tok tok_five],alt[next_1__0seq,tok tok_five]]]
+GR = gram[rule root::[alt[nont next, [...|...]*, + ...|...], alt[[...|...]*, tok...]], rule next::[alt[[...]*, ... ?]]],
+S = gram[rule root::[alt[nont next, root_1__0seq, root_1__1seq|...], alt[nont next, root_3__1seq|...], alt[nont...|...], alt[...|...], alt...|...], rule root_1__0seq::[alt[tok tok_one, tok...], alt[root_1__0seq|...]], rule root_1__1seq::[alt[tok...|...], alt[...|...]], rule root_2__1seq::[alt[...], alt...], rule root_3__1seq::[alt...|...], rule root_4__1seq::[...|...], rule... :: ..., rule...|...].
+
+#+BEGIN_END
+
+* Thinking about far future: nested constructs
+
 #+BEGIN_SRC emacs-lisp
 C*/
 /*
+
 NESTED * (AND NESTED *) WILL POSE A DIFFICULT PROBLEM (is this below correct? - yes it is except that next_1__0seq_1__0seq and next_1__0seq_2__0seq could be equal, but that does not matter?)
 FORTUNATELY THERE A NO NESTINGS IN PYTHON GRAMMAR
 https://docs.python.org/3/reference/grammar.html

@@ -5,6 +5,12 @@
 <li><a href="#sec-1">1. Introduction</a></li>
 <li><a href="#sec-2">2. Define operators</a></li>
 <li><a href="#sec-3">3. Processing the grammar</a></li>
+<li><a href="#sec-4">4. Example usage</a>
+<ul>
+<li><a href="#sec-4-1">4.1. An example</a></li>
+</ul>
+</li>
+<li><a href="#sec-5">5. Thinking about far future: nested constructs</a></li>
 </ul>
 </div>
 </div>
@@ -44,8 +50,11 @@ Markdown export commands
 # Define operators<a id="sec-2" name="sec-2"></a>
 
 Have a look at the following documents about defining operators
+
 <http://www.swi-prolog.org/pldoc/doc_for?object=module/2>
+
 <http://www.swi-prolog.org/pldoc/man?predicate=op/3>
+
 <http://www.swi-prolog.org/pldoc/man?section=operators>
 
 In the hope to improve readability the following operators are defined
@@ -76,7 +85,9 @@ THE FIRST ONE IS NOT RECOGNISED, ONLY THE FIRST ONE!! NEED NEW VERSION SWI PROLO
     Created rules will have sequence numbers which will also be easy to guess for the enduser.
     
     new rules derived from 'old_rule' will be named old_rule_123__1seq (for +) or old_rule_123__0seq (for *)
-    (Thus it is needed to prevent input rule names ending in __0seq or __1seq, so that they do not colide with the new created rules.)
+    (Thus it is needed to prevent input rule names ending in __0seq or __1seq, so that they do not colide with the new created rules. (todo) )
+
+Global variables in Prolog:
 
 <https://stackoverflow.com/questions/11364634/count-the-number-of-calls-of-a-clause>
 
@@ -90,24 +101,27 @@ THE FIRST ONE IS NOT RECOGNISED, ONLY THE FIRST ONE!! NEED NEW VERSION SWI PROLO
     get_grammar(1,G) :-
     G=gram [
     
-    /* rule is a list of alternatives */
+     /* rule is a list of alternatives */
     
-    rule root :: [ 
+     rule root :: [ 
                    /* alternative is a list of terminal and nonterminal symbols and semantic actions, where * means none or more, + means one or more, and ? means none or one */
                    alt [ nont next, [tok tok_one,  tok tok_comma]*,  [tok tok_two, tok tok_comma]+ , [tok tok_three, tok tok_comma]? ,[tok tok_four]+, tok tok_seven, act '{$1=\'123\';}' ],
                    alt [ [ tok tok_eight, tok tok_comma]*, tok tok_eight]
                  ],
-    rule next :: [ alt [ [tok tok_five] * , [tok tok_six] ?] ]
+     rule next :: [ alt [ [tok tok_five] * , [tok tok_six] ?] ]
     ].
     
     /* alternativeIsSimple when there are no *,+,? in it */
     /*
     Uses 'contains_term' from:
+    
     http://www.swi-prolog.org/pldoc/doc/_SWI_/library/occurs.pl
+    
     */
+    
     alternativeIsSimple(alt A) :- \+ contains_term( _ +, A), \+ contains_term( _ *, A), \+ contains_term( _ ?, A).
     
-    /* given a grammar, the rules are processed to get a resulting grammar that containes only rules with simple alternatives. */
+    /* Given a grammar, the rules are processed to get a resulting grammar that containes only rules with simple alternatives. */
     
     simplifyGrammar(gram [], gram []).
     
@@ -119,7 +133,7 @@ THE FIRST ONE IS NOT RECOGNISED, ONLY THE FIRST ONE!! NEED NEW VERSION SWI PROLO
             ,simplifyGrammar(gram AllRestRules,gram SimpleAllRestG)
             ,append( [ rule N :: SimpleR], SimpleAllRestG, SimpleG).
     
-    /* given a rule its alternatives are simplified. The rule can get additional alternatives, but also new additional rules can be created */
+    /* Given a rule its alternatives are simplified. The rule can get additional alternatives, but also new additional rules can be created */
     /* call like
       simplifyRule( rule N :: R, rule N :: S, More)
       The input 'rule N :: R' gives the simple output 'rule N :: S' and a list of additional rules More.
@@ -142,7 +156,7 @@ THE FIRST ONE IS NOT RECOGNISED, ONLY THE FIRST ONE!! NEED NEW VERSION SWI PROLO
             , append(AdditionalRules1, AdditionalRules2, AdditionalRules)
             .
     
-    /* given an alternative any occurance of ? is simplified by replacing the alternative by two new alternatives of the same rule. The original alternative is removed.
+    /* Given an alternative any occurance of ? is simplified by replacing the alternative by two new alternatives of the same rule. The original alternative is removed.
     Any occurance of * is simplified by replacing the alternative by two new alternatives of the same rule and adding two new rules. The original alternative is removed.
     Any occurance of + is simplified by replacing the alternative by a new alternative of the same rule and adding two new rules. The original alternative is removed.
     The rules added in * and + cases are of the same structure to each other, i.e. the same trick works the for both.
@@ -192,7 +206,37 @@ THE FIRST ONE IS NOT RECOGNISED, ONLY THE FIRST ONE!! NEED NEW VERSION SWI PROLO
             append(ProcessedPart,[T],NewProcessedPart)
             ,simplifyAlternative(NewProcessedPart,alt RestA, N, SimplifiedAlternative, AdditionalAlternatives, AdditionalRules).
 
+# Example usage<a id="sec-4" name="sec-4"></a>
+
+## An example<a id="sec-4-1" name="sec-4-1"></a>
+
+\#+BEGIN<sub>SRC</sub> emacs-lisp
+
+[buhtla].
+true.
+
+simplifyGrammar( gram [ rule next :: [ alt [ [[tok tok<sub>7]</sub>\* ,tok tok<sub>six]</sub>\* ] ] ], S), print(S).
+
+gram[rule next::[alt[next<sub>1</sub>\_<sub>0seq]</sub>,alt[]],rule next<sub>1</sub>\_<sub>0seq</sub>::[alt[next<sub>1</sub>\_<sub>0seq</sub><sub>1</sub>\_<sub>0seq</sub>,tok tok<sub>six]</sub>,alt[tok tok<sub>six]</sub>,alt[next<sub>1</sub>\_<sub>0seq</sub>,next<sub>1</sub>\_<sub>0seq</sub><sub>2</sub>\_<sub>0seq</sub>,tok tok<sub>six]</sub>,alt[next<sub>1</sub>\_<sub>0seq</sub>,tok tok<sub>six]]</sub>,rule next<sub>1</sub>\_<sub>0seq</sub><sub>1</sub>\_<sub>0seq</sub>::[alt[tok tok<sub>7]</sub>,alt[next<sub>1</sub>\_<sub>0seq</sub><sub>1</sub>\_<sub>0seq</sub>,tok tok<sub>7]]</sub>,rule next<sub>1</sub>\_<sub>0seq</sub><sub>2</sub>\_<sub>0seq</sub>::[alt[tok tok<sub>7]</sub>,alt[next<sub>1</sub>\_<sub>0seq</sub><sub>2</sub>\_<sub>0seq</sub>,tok tok<sub>7]]]</sub>
+S = gram[rule next::[alt[next<sub>1</sub>\_<sub>0seq]</sub>, alt[]], rule next<sub>1</sub>\_<sub>0seq</sub>::[alt[next<sub>1</sub>\_<sub>0seq</sub><sub>1</sub>\_<sub>0seq</sub>, tok&#x2026;], alt[tok&#x2026;], alt[&#x2026;|&#x2026;], alt&#x2026;], rule next<sub>1</sub>\_<sub>0seq</sub><sub>1</sub>\_<sub>0seq</sub>::[alt[tok&#x2026;], alt[&#x2026;|&#x2026;]], rule next<sub>1</sub>\_<sub>0seq</sub><sub>2</sub>\_<sub>0seq</sub>::[alt[&#x2026;], alt&#x2026;]].
+
+\#+BEGIN<sub>END</sub>
+
+\#+BEGIN<sub>SRC</sub> emacs-lisp
+
+[buhtla].
+true.
+get<sub>grammar</sub>(1,GR),simplifyGrammar( GR, S), print(S).
+gram[rule root::[alt[nont next,root<sub>1</sub>\_<sub>0seq</sub>,root<sub>1</sub>\_<sub>1seq</sub>,tok tok<sub>three</sub>,tok tok<sub>comma</sub>,root<sub>2</sub>\_<sub>1seq</sub>,tok tok<sub>seven</sub>,act'{$1=\\'123\\';}'],alt[nont next,root<sub>3</sub>\_<sub>1seq</sub>,tok tok<sub>three</sub>,tok tok<sub>comma</sub>,root<sub>4</sub>\_<sub>1seq</sub>,tok tok<sub>seven</sub>,act'{$1=\\'123\\';}'],alt[nont next,root<sub>3</sub>\_<sub>1seq</sub>,root<sub>5</sub>\_<sub>1seq</sub>,tok tok<sub>seven</sub>,act'{$1=\\'123\\';}'],alt[nont next,root<sub>1</sub>\_<sub>0seq</sub>,root<sub>1</sub>\_<sub>1seq</sub>,root<sub>6</sub>\_<sub>1seq</sub>,tok tok<sub>seven</sub>,act'{$1=\\'123\\';}'],alt[root<sub>2</sub>\_<sub>0seq</sub>,tok tok<sub>eight]</sub>,alt[tok tok<sub>eight]]</sub>,rule root<sub>1</sub>\_<sub>0seq</sub>::[alt[tok tok<sub>one</sub>,tok tok<sub>comma]</sub>,alt[root<sub>1</sub>\_<sub>0seq</sub>,tok tok<sub>one</sub>,tok tok<sub>comma]]</sub>,rule root<sub>1</sub>\_<sub>1seq</sub>::[alt[tok tok<sub>two</sub>,tok tok<sub>comma]</sub>,alt[root<sub>1</sub>\_<sub>1seq</sub>,tok tok<sub>two</sub>,tok tok<sub>comma]]</sub>,rule root<sub>2</sub>\_<sub>1seq</sub>::[alt[tok tok<sub>four]</sub>,alt[root<sub>2</sub>\_<sub>1seq</sub>,tok tok<sub>four]]</sub>,rule root<sub>3</sub>\_<sub>1seq</sub>::[alt[tok tok<sub>two</sub>,tok tok<sub>comma]</sub>,alt[root<sub>3</sub>\_<sub>1seq</sub>,tok tok<sub>two</sub>,tok tok<sub>comma]]</sub>,rule root<sub>4</sub>\_<sub>1seq</sub>::[alt[tok tok<sub>four]</sub>,alt[root<sub>4</sub>\_<sub>1seq</sub>,tok tok<sub>four]]</sub>,rule root<sub>5</sub>\_<sub>1seq</sub>::[alt[tok tok<sub>four]</sub>,alt[root<sub>5</sub>\_<sub>1seq</sub>,tok tok<sub>four]]</sub>,rule root<sub>6</sub>\_<sub>1seq</sub>::[alt[tok tok<sub>four]</sub>,alt[root<sub>6</sub>\_<sub>1seq</sub>,tok tok<sub>four]]</sub>,rule root<sub>2</sub>\_<sub>0seq</sub>::[alt[tok tok<sub>eight</sub>,tok tok<sub>comma]</sub>,alt[root<sub>2</sub>\_<sub>0seq</sub>,tok tok<sub>eight</sub>,tok tok<sub>comma]]</sub>,rule next::[alt[next<sub>1</sub>\_<sub>0seq</sub>,tok tok<sub>six]</sub>,alt[tok tok<sub>six]</sub>,alt[],alt[next<sub>1</sub>\_<sub>0seq]]</sub>,rule next<sub>1</sub>\_<sub>0seq</sub>::[alt[tok tok<sub>five]</sub>,alt[next<sub>1</sub>\_<sub>0seq</sub>,tok tok<sub>five]]]</sub>
+GR = gram[rule root::[alt[nont next, [&#x2026;|&#x2026;]\*, + &#x2026;|&#x2026;], alt[[&#x2026;|&#x2026;]\*, tok&#x2026;]], rule next::[alt[[&#x2026;]\*, &#x2026; ?]]],
+S = gram[rule root::[alt[nont next, root<sub>1</sub>\_<sub>0seq</sub>, root<sub>1</sub>\_<sub>1seq|</sub>&#x2026;], alt[nont next, root<sub>3</sub>\_<sub>1seq|</sub>&#x2026;], alt[nont&#x2026;|&#x2026;], alt[&#x2026;|&#x2026;], alt&#x2026;|&#x2026;], rule root<sub>1</sub>\_<sub>0seq</sub>::[alt[tok tok<sub>one</sub>, tok&#x2026;], alt[root<sub>1</sub>\_<sub>0seq|</sub>&#x2026;]], rule root<sub>1</sub>\_<sub>1seq</sub>::[alt[tok&#x2026;|&#x2026;], alt[&#x2026;|&#x2026;]], rule root<sub>2</sub>\_<sub>1seq</sub>::[alt[&#x2026;], alt&#x2026;], rule root<sub>3</sub>\_<sub>1seq</sub>::[alt&#x2026;|&#x2026;], rule root<sub>4</sub>\_<sub>1seq</sub>::[&#x2026;|&#x2026;], rule&#x2026; :: &#x2026;, rule&#x2026;|&#x2026;].
+
+\#+BEGIN<sub>END</sub>
+
+# Thinking about far future: nested constructs<a id="sec-5" name="sec-5"></a>
+
     /*
+    
     NESTED * (AND NESTED *) WILL POSE A DIFFICULT PROBLEM (is this below correct? - yes it is except that next_1__0seq_1__0seq and next_1__0seq_2__0seq could be equal, but that does not matter?)
     FORTUNATELY THERE A NO NESTINGS IN PYTHON GRAMMAR
     https://docs.python.org/3/reference/grammar.html
