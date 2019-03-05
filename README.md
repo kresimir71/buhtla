@@ -59,25 +59,18 @@ Have a look at the following documents about defining operators
 
 In the hope to improve readability the following operators are defined
 
-The following manner give problems, why?
+:- op(40, fx, gram ).
+:- op(40, fx, rule ).
+:- op(30, xfx, :: ).
+:- op(40, fx, alt ).
+:- op(40, fx, nont ).
+:- op(40, fx, tok ).
+:- op(40, fx, act ).
+:- op(50, xf, '+').
+:- op(50, xf, '\*').
+:- op(50, xf, ? ).
 
-    :-  op(    40,  fx,  [  'grammar', 'rule', 'a', 'n', 't'  ]), op(    50,  xf,  [  '+','*','?'  ]).
-
-The following forms are okay:
-
-THE FIRST ONE IS NOT RECOGNISED, ONLY THE FIRST ONE!! NEED NEW VERSION SWI PROLOG?
-
-    :- op(40, fx, gram1 ).
-    :- op(40, fx, gram ).
-    :- op(40, fx, rule ).
-    :- op(30, xfx, :: ).
-    :- op(40, fx, alt ).
-    :- op(40, fx, nont ).
-    :- op(40, fx, tok ).
-    :- op(40, fx, act ).
-    :- op(50, xf, '+').
-    :- op(50, xf, '*').
-    :- op(50, xf, ? ).
+\#+END<sub>SRC</sub>
 
 # Processing the grammar<a id="sec-3" name="sec-3"></a>
 

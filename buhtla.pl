@@ -53,20 +53,6 @@ C*/
 In the hope to improve readability the following operators are defined
 C*/
 
-/*C
- The following manner give problems, why?
-#+BEGIN_SRC emacs-lisp
- :-  op(    40,  fx,  [  'grammar', 'rule', 'a', 'n', 't'  ]), op(    50,  xf,  [  '+','*','?'  ]).
-#+END_SRC
-
- The following forms are okay:
-
-THE FIRST ONE IS NOT RECOGNISED, ONLY THE FIRST ONE!! NEED NEW VERSION SWI PROLOG?
-
-#+BEGIN_SRC emacs-lisp
-C*/
-
-:- op(40, fx, gram1 ).
 :- op(40, fx, gram ).
 :- op(40, fx, rule ).
 :- op(30, xfx, :: ).
