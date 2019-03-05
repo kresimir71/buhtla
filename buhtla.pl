@@ -51,6 +51,8 @@ C*/
 
 /*C
 In the hope to improve readability the following operators are defined
+
+#+BEGIN_SRC emacs-lisp
 C*/
 
 :- op(40, fx, gram ).

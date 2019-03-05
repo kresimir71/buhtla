@@ -59,18 +59,16 @@ Have a look at the following documents about defining operators
 
 In the hope to improve readability the following operators are defined
 
-:- op(40, fx, gram ).
-:- op(40, fx, rule ).
-:- op(30, xfx, :: ).
-:- op(40, fx, alt ).
-:- op(40, fx, nont ).
-:- op(40, fx, tok ).
-:- op(40, fx, act ).
-:- op(50, xf, '+').
-:- op(50, xf, '\*').
-:- op(50, xf, ? ).
-
-\#+END<sub>SRC</sub>
+    :- op(40, fx, gram ).
+    :- op(40, fx, rule ).
+    :- op(30, xfx, :: ).
+    :- op(40, fx, alt ).
+    :- op(40, fx, nont ).
+    :- op(40, fx, tok ).
+    :- op(40, fx, act ).
+    :- op(50, xf, '+').
+    :- op(50, xf, '*').
+    :- op(50, xf, ? ).
 
 # Processing the grammar<a id="sec-3" name="sec-3"></a>
 
