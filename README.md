@@ -1,15 +1,15 @@
 
 # Table of Contents
 
-1.  [Introduction](#org0e59b26)
-2.  [Define operators](#org8e8ccf2)
-3.  [Processing the grammar](#orgb3015a5)
-4.  [Example usage](#orga15aac0)
-    1.  [An example](#org7130d1d)
-5.  [Thinking about far future: nested constructs](#orgdad7ea2)
+1.  [Introduction](#orgacf1e57)
+2.  [Define operators](#org63e2bc4)
+3.  [Processing the grammar](#org55c73bc)
+4.  [Example usage](#org5e2ea7b)
+    1.  [An example](#org018134c)
+5.  [Thinking about far future: nested constructs](#org18fa51d)
 
 
-<a id="org0e59b26"></a>
+<a id="orgacf1e57"></a>
 
 # Introduction
 
@@ -45,7 +45,7 @@ Markdown export commands
     )
 
 
-<a id="org8e8ccf2"></a>
+<a id="org63e2bc4"></a>
 
 # Define operators
 
@@ -73,7 +73,7 @@ In the hope to improve readability the following operators are defined
     :- op(50, xf, ? ).
 
 
-<a id="orgb3015a5"></a>
+<a id="org55c73bc"></a>
 
 # Processing the grammar
 
@@ -164,7 +164,7 @@ Global variables in Prolog:
     gets the already processed part ProcessedPart of the alternative as input, the rest to be processed part A as input and the current rule name N as input and calculates a list SimplifiedAlternative and a list AdditionalAlternatives and a list AdditionalRules
     */
     
-    simplifyAlternative(_,alt [],_ ,[] , [], []) :- !.  % ! is not really needed here because [] can not match elsewhere
+    simplifyAlternative(_,alt [],_ ,[] , AdditionalAlternatives, AdditionalRules) :- !, ( var(AdditionalAlternatives) -> AdditionalAlternatives=[] ; true ) , ( var(AdditionalRules) -> AdditionalRules=[] ; true ).  % ! is not really needed here because [] can not match elsewhere
     
     simplifyAlternative(ProcessedPart,alt [ [B|T]? | RestA],N , SimplifiedAlternative, [alt NewAlternative|AdditionalAlternatives], AdditionalRules) :- 
     	!
@@ -205,12 +205,12 @@ Global variables in Prolog:
     	,simplifyAlternative(NewProcessedPart,alt RestA, N, SimplifiedAlternative, AdditionalAlternatives, AdditionalRules).
 
 
-<a id="orga15aac0"></a>
+<a id="org5e2ea7b"></a>
 
 # Example usage
 
 
-<a id="org7130d1d"></a>
+<a id="org018134c"></a>
 
 ## An example
 
@@ -232,7 +232,7 @@ Global variables in Prolog:
     S = gram[rule root::[alt[nont next, root_1__0seq, root_1__1seq|...], alt[nont next, root_3__1seq|...], alt[nont...|...], alt[...|...], alt...|...], rule root_1__0seq::[alt[tok tok_one, tok...], alt[root_1__0seq|...]], rule root_1__1seq::[alt[tok...|...], alt[...|...]], rule root_2__1seq::[alt[...], alt...], rule root_3__1seq::[alt...|...], rule root_4__1seq::[...|...], rule... :: ..., rule...|...].
 
 
-<a id="orgdad7ea2"></a>
+<a id="org18fa51d"></a>
 
 # Thinking about far future: nested constructs
 
