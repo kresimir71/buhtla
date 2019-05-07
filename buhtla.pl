@@ -161,7 +161,7 @@ simplifyAlternative(ProcessedPart,alt A, N,SimplifiedAlternative, AdditionalAlte
 gets the already processed part ProcessedPart of the alternative as input, the rest to be processed part A as input and the current rule name N as input and calculates a list SimplifiedAlternative and a list AdditionalAlternatives and a list AdditionalRules
 */
 
-simplifyAlternative(_,alt [],_ ,[] , [], []) :- !.  % ! is not really needed here because [] can not match elsewhere
+simplifyAlternative(_,alt [],_ ,[] , AdditionalAlternatives, AdditionalRules) :- !, ( var(AdditionalAlternatives) -> AdditionalAlternatives=[] ; true ) , ( var(AdditionalRules) -> AdditionalRules=[] ; true ).  % ! is not really needed here because [] can not match elsewhere
 
 simplifyAlternative(ProcessedPart,alt [ [B|T]? | RestA],N , SimplifiedAlternative, [alt NewAlternative|AdditionalAlternatives], AdditionalRules) :- 
 	!
