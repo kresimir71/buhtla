@@ -7,7 +7,7 @@ Have a look at Python grammar:
 
 https://docs.python.org/3/reference/grammar.html
 
-This text is about rewriting a grammar to a simple one without the repeating constructs * and + and without construct ? for optional so that it can be processed bt Bison tool.
+This text is about rewriting a grammar to a simple one without the repeating constructs * and + and without construct ? for optional so that it can be processed by Bison tool.
 
 C*/
 /*C
@@ -97,7 +97,7 @@ nb_inc(Key):-
   succ(Old, New),
   nb_setval(Key, New).
 
-% grammar is a list of rules
+% grammar is a list of rules, for instance a test grammar
 
 get_grammar(1,G) :-
 G=gram [
@@ -129,7 +129,7 @@ simplifyGrammar(gram [], gram []).
 simplifyGrammar(gram [rule N :: R| RestG], gram SimpleG) :- 
 	nb_setval(seq0,1),nb_setval(seq1,1)
 	,simplifyRule(rule N :: R, rule _ :: SimpleR, AdditionalRules)
-	%,maplist(print,[R,SimpleR,AdditionalRules])
+	%,maplist(print,[R,SimpleR,AdditionalRules])  %for debugging
 	,append(AdditionalRules, RestG, AllRestRules)
         ,simplifyGrammar(gram AllRestRules,gram SimpleAllRestG)
         ,append( [ rule N :: SimpleR], SimpleAllRestG, SimpleG).
@@ -178,7 +178,7 @@ simplifyAlternative(ProcessedPart,alt [ [B|T]? | RestA],N , SimplifiedAlternativ
 
 simplifyAlternative(ProcessedPart, alt [ [B|T]+ | RestA],N , SimplifiedAlternative, AdditionalAlternatives, AdditionalRules) :- 	
         !
-        %,maplist(writeln,["step 1",ProcessedPart,[B|T],RestA])
+        %,maplist(writeln,["step 1",ProcessedPart,[B|T],RestA]) %for debugging
         ,nb_getval(seq1,Seq1)
         ,atomics_to_string([N,Seq1,'_1seq'],'_',StringNewName)
         ,atom_string(NewName, StringNewName)
@@ -186,12 +186,12 @@ simplifyAlternative(ProcessedPart, alt [ [B|T]+ | RestA],N , SimplifiedAlternati
         ,simplifyAlternative(ProcessedPart, alt [ NewName | RestA],N , SimplifiedAlternative, AdditionalAlternatives, AdditionalRules1)
         ,append([NewName],[B|T],T1)
         ,append([rule NewName :: [ alt [B|T], alt T1 ]],AdditionalRules1,AdditionalRules)
-        %,maplist(writeln,["step 2",SimplifiedAlternative,AdditionalRules])
+        %,maplist(writeln,["step 2",SimplifiedAlternative,AdditionalRules]) %for debugging
         .
 
 simplifyAlternative(ProcessedPart, alt [ [B|T]* | RestA],N , SimplifiedAlternative, AdditionalAlternatives, AdditionalRules) :-
         !
-        %,maplist(writeln,["step 1",ProcessedPart,[B|T],RestA])
+        %,maplist(writeln,["step 1",ProcessedPart,[B|T],RestA]) %for debugging
         ,nb_getval(seq0,Seq0)
         ,atomics_to_string([N,Seq0,'_0seq'],'_',StringNewName)
         ,atom_string(NewName, StringNewName)
@@ -200,7 +200,7 @@ simplifyAlternative(ProcessedPart, alt [ [B|T]* | RestA],N , SimplifiedAlternati
         ,append(ProcessedPart, RestA, OneMoreAlternative), append([alt OneMoreAlternative],AdditionalAlternatives1,AdditionalAlternatives)
         ,append([NewName],[B|T],T1)
         ,append([rule NewName :: [ alt [B|T], alt T1 ]],AdditionalRules1,AdditionalRules)
-        %,maplist(writeln,["step 2",SimplifiedAlternative,AdditionalRules])
+        %,maplist(writeln,["step 2",SimplifiedAlternative,AdditionalRules]) %for debugging
         .
 	
 simplifyAlternative(ProcessedPart,alt [ T | RestA],N , [T|SimplifiedAlternative], AdditionalAlternatives,AdditionalRules) :- 
