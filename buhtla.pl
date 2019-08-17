@@ -2,7 +2,13 @@
 * Introduction
 
 Rewriting the Pyton language grammar to Bison grammar and generalisations.
-This text is about rewriting a grammar to a simple one without the repeating constructs * and + and without construct ? for optional
+
+Have a look at Python grammar:
+
+https://docs.python.org/3/reference/grammar.html
+
+This text is about rewriting a grammar to a simple one without the repeating constructs * and + and without construct ? for optional so that it can be processed bt Bison tool.
+
 C*/
 /*C
 
