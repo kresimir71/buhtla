@@ -160,7 +160,7 @@ simplifyRule( rule N :: [alt A | RestR], rule _ :: [alt SimplifiedAlternative |S
 /* Given an alternative any occurance of ? is simplified by replacing the alternative by two new alternatives of the same rule. The original alternative is removed.
 Any occurance of * is simplified by replacing the alternative by two new alternatives of the same rule and adding two new rules. The original alternative is removed.
 Any occurance of + is simplified by replacing the alternative by a new alternative of the same rule and adding two new rules. The original alternative is removed.
-The rules added in * and + cases are of the same structure to each other, i.e. the same trick works the for both.
+The rules added in * and + cases are of the same structure to each other, i.e. the same trick works for both.
 
 call like
 simplifyAlternative(ProcessedPart,alt A, N,SimplifiedAlternative, AdditionalAlternatives, AdditionalRules)
@@ -217,18 +217,6 @@ simplifyAlternative(ProcessedPart,alt [ T | RestA],N , [T|SimplifiedAlternative]
 
 [buhtla].
 true.
-
-simplifyGrammar( gram [ rule next :: [ alt [ [[tok tok_7]* ,tok tok_six]* ] ] ], S), print(S).
-
-gram[rule next::[alt[next_1__0seq],alt[]],rule next_1__0seq::[alt[next_1__0seq_1__0seq,tok tok_six],alt[tok tok_six],alt[next_1__0seq,next_1__0seq_2__0seq,tok tok_six],alt[next_1__0seq,tok tok_six]],rule next_1__0seq_1__0seq::[alt[tok tok_7],alt[next_1__0seq_1__0seq,tok tok_7]],rule next_1__0seq_2__0seq::[alt[tok tok_7],alt[next_1__0seq_2__0seq,tok tok_7]]]
-S = gram[rule next::[alt[next_1__0seq], alt[]], rule next_1__0seq::[alt[next_1__0seq_1__0seq, tok...], alt[tok...], alt[...|...], alt...], rule next_1__0seq_1__0seq::[alt[tok...], alt[...|...]], rule next_1__0seq_2__0seq::[alt[...], alt...]].
-
-#+END_SRC
-
-#+BEGIN_SRC emacs-lisp
-
-[buhtla].
-true.
 get_grammar(1,GR),simplifyGrammar( GR, S), print(S).
 gram[rule root::[alt[nont next,root_1__0seq,root_1__1seq,tok tok_three,tok tok_comma,root_2__1seq,tok tok_seven,act'{$1=\'123\';}'],alt[nont next,root_3__1seq,tok tok_three,tok tok_comma,root_4__1seq,tok tok_seven,act'{$1=\'123\';}'],alt[nont next,root_3__1seq,root_5__1seq,tok tok_seven,act'{$1=\'123\';}'],alt[nont next,root_1__0seq,root_1__1seq,root_6__1seq,tok tok_seven,act'{$1=\'123\';}'],alt[root_2__0seq,tok tok_eight],alt[tok tok_eight]],rule root_1__0seq::[alt[tok tok_one,tok tok_comma],alt[root_1__0seq,tok tok_one,tok tok_comma]],rule root_1__1seq::[alt[tok tok_two,tok tok_comma],alt[root_1__1seq,tok tok_two,tok tok_comma]],rule root_2__1seq::[alt[tok tok_four],alt[root_2__1seq,tok tok_four]],rule root_3__1seq::[alt[tok tok_two,tok tok_comma],alt[root_3__1seq,tok tok_two,tok tok_comma]],rule root_4__1seq::[alt[tok tok_four],alt[root_4__1seq,tok tok_four]],rule root_5__1seq::[alt[tok tok_four],alt[root_5__1seq,tok tok_four]],rule root_6__1seq::[alt[tok tok_four],alt[root_6__1seq,tok tok_four]],rule root_2__0seq::[alt[tok tok_eight,tok tok_comma],alt[root_2__0seq,tok tok_eight,tok tok_comma]],rule next::[alt[next_1__0seq,tok tok_six],alt[tok tok_six],alt[],alt[next_1__0seq]],rule next_1__0seq::[alt[tok tok_five],alt[next_1__0seq,tok tok_five]]]
 GR = gram[rule root::[alt[nont next, [...|...]*, + ...|...], alt[[...|...]*, tok...]], rule next::[alt[[...]*, ... ?]]],
@@ -238,15 +226,27 @@ S = gram[rule root::[alt[nont next, root_1__0seq, root_1__1seq|...], alt[nont ne
 
 * Thinking about far future: nested constructs
 
+** Another example where nested * occurs 
+
 #+BEGIN_SRC emacs-lisp
 C*/
 /*
 
-NESTED * (AND NESTED *) WILL POSE A DIFFICULT PROBLEM (is this below correct? - yes it is except that next_1__0seq_1__0seq and next_1__0seq_2__0seq could be equal, but that does not matter?)
-FORTUNATELY THERE A NO NESTINGS IN PYTHON GRAMMAR
+NESTED * (AND NESTED +) WILL POSE A DIFFICULT PROBLEM (is this below correct? - yes it is, except that next_1__0seq_1__0seq and next_1__0seq_2__0seq could be equal, but that does not matter?)
+FORTUNATELY THERE ARE NO SUCH NESTINGS IN PYTHON GRAMMAR
 https://docs.python.org/3/reference/grammar.html
 
+[buhtla].
+true.
+
 simplifyGrammar( gram [ rule next :: [ alt [ [[tok tok_7]* ,tok tok_six]* ] ] ], S), print(S).
+
+% The result will be:
+
+gram[rule next::[alt[next_1__0seq],alt[]],rule next_1__0seq::[alt[next_1__0seq_1__0seq,tok tok_six],alt[tok tok_six],alt[next_1__0seq,next_1__0seq_2__0seq,tok tok_six],alt[next_1__0seq,tok tok_six]],rule next_1__0seq_1__0seq::[alt[tok tok_7],alt[next_1__0seq_1__0seq,tok tok_7]],rule next_1__0seq_2__0seq::[alt[tok tok_7],alt[next_1__0seq_2__0seq,tok tok_7]]]
+S = gram[rule next::[alt[next_1__0seq], alt[]], rule next_1__0seq::[alt[next_1__0seq_1__0seq, tok...], alt[tok...], alt[...|...], alt...], rule next_1__0seq_1__0seq::[alt[tok...], alt[...|...]], rule next_1__0seq_2__0seq::[alt[...], alt...]].
+
+% The result INDENTED will be:
 
 gram[
      rule next::[

@@ -1,15 +1,16 @@
 
 # Table of Contents
 
-1.  [Introduction](#orgd8150e1)
-2.  [Define operators](#org4db5d9a)
-3.  [Processing the grammar](#orge208f8c)
-4.  [Example usage](#org8e2bb96)
-    1.  [An example](#orgb69d810)
-5.  [Thinking about far future: nested constructs](#org946b546)
+1.  [Introduction](#org380e623)
+2.  [Define operators](#orgb06c855)
+3.  [Processing the grammar](#org913de10)
+4.  [Example usage](#orga03f828)
+    1.  [An example](#orgc33d6f4)
+5.  [Thinking about far future: nested constructs](#orgbb570d5)
+    1.  [Another example where nested \* occurs](#org77f337f)
 
 
-<a id="orgd8150e1"></a>
+<a id="org380e623"></a>
 
 # Introduction
 
@@ -50,7 +51,7 @@ Markdown export commands
     )
 
 
-<a id="org4db5d9a"></a>
+<a id="orgb06c855"></a>
 
 # Define operators
 
@@ -78,7 +79,7 @@ In the hope to improve readability the following operators are defined
     :- op(50, xf, ? ).
 
 
-<a id="orge208f8c"></a>
+<a id="org913de10"></a>
 
 # Processing the grammar
 
@@ -162,7 +163,7 @@ Global variables in Prolog:
     /* Given an alternative any occurance of ? is simplified by replacing the alternative by two new alternatives of the same rule. The original alternative is removed.
     Any occurance of * is simplified by replacing the alternative by two new alternatives of the same rule and adding two new rules. The original alternative is removed.
     Any occurance of + is simplified by replacing the alternative by a new alternative of the same rule and adding two new rules. The original alternative is removed.
-    The rules added in * and + cases are of the same structure to each other, i.e. the same trick works the for both.
+    The rules added in * and + cases are of the same structure to each other, i.e. the same trick works for both.
     
     call like
     simplifyAlternative(ProcessedPart,alt A, N,SimplifiedAlternative, AdditionalAlternatives, AdditionalRules)
@@ -210,23 +211,14 @@ Global variables in Prolog:
     	,simplifyAlternative(NewProcessedPart,alt RestA, N, SimplifiedAlternative, AdditionalAlternatives, AdditionalRules).
 
 
-<a id="org8e2bb96"></a>
+<a id="orga03f828"></a>
 
 # Example usage
 
 
-<a id="orgb69d810"></a>
+<a id="orgc33d6f4"></a>
 
 ## An example
-
-    
-    [buhtla].
-    true.
-    
-    simplifyGrammar( gram [ rule next :: [ alt [ [[tok tok_7]* ,tok tok_six]* ] ] ], S), print(S).
-    
-    gram[rule next::[alt[next_1__0seq],alt[]],rule next_1__0seq::[alt[next_1__0seq_1__0seq,tok tok_six],alt[tok tok_six],alt[next_1__0seq,next_1__0seq_2__0seq,tok tok_six],alt[next_1__0seq,tok tok_six]],rule next_1__0seq_1__0seq::[alt[tok tok_7],alt[next_1__0seq_1__0seq,tok tok_7]],rule next_1__0seq_2__0seq::[alt[tok tok_7],alt[next_1__0seq_2__0seq,tok tok_7]]]
-    S = gram[rule next::[alt[next_1__0seq], alt[]], rule next_1__0seq::[alt[next_1__0seq_1__0seq, tok...], alt[tok...], alt[...|...], alt...], rule next_1__0seq_1__0seq::[alt[tok...], alt[...|...]], rule next_1__0seq_2__0seq::[alt[...], alt...]].
 
     
     [buhtla].
@@ -237,18 +229,33 @@ Global variables in Prolog:
     S = gram[rule root::[alt[nont next, root_1__0seq, root_1__1seq|...], alt[nont next, root_3__1seq|...], alt[nont...|...], alt[...|...], alt...|...], rule root_1__0seq::[alt[tok tok_one, tok...], alt[root_1__0seq|...]], rule root_1__1seq::[alt[tok...|...], alt[...|...]], rule root_2__1seq::[alt[...], alt...], rule root_3__1seq::[alt...|...], rule root_4__1seq::[...|...], rule... :: ..., rule...|...].
 
 
-<a id="org946b546"></a>
+<a id="orgbb570d5"></a>
 
 # Thinking about far future: nested constructs
+
+
+<a id="org77f337f"></a>
+
+## Another example where nested \* occurs
 
     
     /*
     
-    NESTED * (AND NESTED *) WILL POSE A DIFFICULT PROBLEM (is this below correct? - yes it is except that next_1__0seq_1__0seq and next_1__0seq_2__0seq could be equal, but that does not matter?)
-    FORTUNATELY THERE A NO NESTINGS IN PYTHON GRAMMAR
+    NESTED * (AND NESTED +) WILL POSE A DIFFICULT PROBLEM (is this below correct? - yes it is, except that next_1__0seq_1__0seq and next_1__0seq_2__0seq could be equal, but that does not matter?)
+    FORTUNATELY THERE ARE NO SUCH NESTINGS IN PYTHON GRAMMAR
     https://docs.python.org/3/reference/grammar.html
     
+    [buhtla].
+    true.
+    
     simplifyGrammar( gram [ rule next :: [ alt [ [[tok tok_7]* ,tok tok_six]* ] ] ], S), print(S).
+    
+    % The result will be:
+    
+    gram[rule next::[alt[next_1__0seq],alt[]],rule next_1__0seq::[alt[next_1__0seq_1__0seq,tok tok_six],alt[tok tok_six],alt[next_1__0seq,next_1__0seq_2__0seq,tok tok_six],alt[next_1__0seq,tok tok_six]],rule next_1__0seq_1__0seq::[alt[tok tok_7],alt[next_1__0seq_1__0seq,tok tok_7]],rule next_1__0seq_2__0seq::[alt[tok tok_7],alt[next_1__0seq_2__0seq,tok tok_7]]]
+    S = gram[rule next::[alt[next_1__0seq], alt[]], rule next_1__0seq::[alt[next_1__0seq_1__0seq, tok...], alt[tok...], alt[...|...], alt...], rule next_1__0seq_1__0seq::[alt[tok...], alt[...|...]], rule next_1__0seq_2__0seq::[alt[...], alt...]].
+    
+    % The result INDENTED will be:
     
     gram[
          rule next::[
