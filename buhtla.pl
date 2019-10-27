@@ -183,6 +183,7 @@ simplifyAlternative(ProcessedPart, alt [ [B|T]+ | RestA],N , SimplifiedAlternati
         ,atomics_to_string([N,Seq1,'_1seq'],'_',StringNewName)
         ,atom_string(NewName, StringNewName)
         ,nb_inc(seq1)
+	% the next three lines are the 'core' computations
         ,simplifyAlternative(ProcessedPart, alt [ NewName | RestA],N , SimplifiedAlternative, AdditionalAlternatives, AdditionalRules1)
         ,append([NewName],[B|T],T1)
         ,append([rule NewName :: [ alt [B|T], alt T1 ]],AdditionalRules1,AdditionalRules)
@@ -196,6 +197,7 @@ simplifyAlternative(ProcessedPart, alt [ [B|T]* | RestA],N , SimplifiedAlternati
         ,atomics_to_string([N,Seq0,'_0seq'],'_',StringNewName)
         ,atom_string(NewName, StringNewName)
         ,nb_inc(seq0)
+	% the next four lines are the 'core' computations
         ,simplifyAlternative(ProcessedPart, alt [ NewName | RestA],N , SimplifiedAlternative, AdditionalAlternatives1, AdditionalRules1)
         ,append(ProcessedPart, RestA, OneMoreAlternative), append([alt OneMoreAlternative],AdditionalAlternatives1,AdditionalAlternatives)
         ,append([NewName],[B|T],T1)
@@ -233,7 +235,7 @@ C*/
 /*
 
 NESTED * (AND NESTED +) WILL POSE A DIFFICULT PROBLEM (is this below correct? - yes it is, except that next_1__0seq_1__0seq and next_1__0seq_2__0seq could be equal, but that does not matter?)
-FORTUNATELY THERE ARE NO SUCH NESTINGS IN PYTHON GRAMMAR
++FORTUNATELY THERE ARE NO SUCH NESTINGS IN PYTHON GRAMMAR
 https://docs.python.org/3/reference/grammar.html
 
 [buhtla].
