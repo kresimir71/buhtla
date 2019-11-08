@@ -1,19 +1,21 @@
 
 # Table of Contents
 
-1.  [Introduction](#org82a6c82)
-    1.  [EMACS lisp program to generate this text](#orgab99de8)
-2.  [Define operators](#org94306b1)
-3.  [Processing the grammar](#orgeb7a285)
-4.  [Example usage](#orged4df8f)
-    1.  [An example](#orgcb596d8)
-5.  [Thinking about far future: nested constructs](#org26f5df3)
-    1.  [Another example where nested \* occurs](#org29a122e)
+1.  [Introduction](#orgcaf6a18)
+    1.  [EMACS lisp program to generate this text](#orgbc069d8)
+2.  [Define operators](#orgbf1c953)
+3.  [Processing the grammar](#org95d446e)
+4.  [Example usage](#orgd504eb1)
+    1.  [An example](#org6cc8ab9)
+5.  [Thinking about far future: nested constructs](#org5e22721)
+    1.  [Another example where nested \* occurs](#org6279b01)
 
 
-<a id="org82a6c82"></a>
+<a id="orgcaf6a18"></a>
 
 # Introduction
+
+For a newer version see [simpler/buhtlasimple.pl](simpler/buhtlasimple.pl).
 
 Rewriting the Python language grammar to Bison grammar and generalisations.
 
@@ -24,7 +26,7 @@ Have a look at Python grammar:
 This text is about rewriting a grammar to a simple one without the repeating constructs \* and + and without construct ? for optional so that it can be processed by Bison tool.
 
 
-<a id="orgab99de8"></a>
+<a id="orgbc069d8"></a>
 
 ## EMACS lisp program to generate this text
 
@@ -57,7 +59,7 @@ Markdown export commands:
     )
 
 
-<a id="org94306b1"></a>
+<a id="orgbf1c953"></a>
 
 # Define operators
 
@@ -85,7 +87,7 @@ In the hope to improve readability the following operators are defined
     :- op(50, xf, ? ).
 
 
-<a id="orgeb7a285"></a>
+<a id="org95d446e"></a>
 
 # Processing the grammar
 
@@ -219,12 +221,12 @@ Global variables in Prolog:
     	,simplifyAlternative(NewProcessedPart,alt RestA, N, SimplifiedAlternative, AdditionalAlternatives, AdditionalRules).
 
 
-<a id="orged4df8f"></a>
+<a id="orgd504eb1"></a>
 
 # Example usage
 
 
-<a id="orgcb596d8"></a>
+<a id="org6cc8ab9"></a>
 
 ## An example
 
@@ -237,12 +239,12 @@ Global variables in Prolog:
     S = gram[rule root::[alt[nont next, root_1__0seq, root_1__1seq|...], alt[nont next, root_3__1seq|...], alt[nont...|...], alt[...|...], alt...|...], rule root_1__0seq::[alt[tok tok_one, tok...], alt[root_1__0seq|...]], rule root_1__1seq::[alt[tok...|...], alt[...|...]], rule root_2__1seq::[alt[...], alt...], rule root_3__1seq::[alt...|...], rule root_4__1seq::[...|...], rule... :: ..., rule...|...].
 
 
-<a id="org26f5df3"></a>
+<a id="org5e22721"></a>
 
 # Thinking about far future: nested constructs
 
 
-<a id="org29a122e"></a>
+<a id="org6279b01"></a>
 
 ## Another example where nested \* occurs
 

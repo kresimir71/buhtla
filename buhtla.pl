@@ -1,6 +1,8 @@
 /*C
 * Introduction
 
+For a newer version see [[file:simpler/buhtlasimple.pl][simpler/buhtlasimple.pl]].
+
 Rewriting the Python language grammar to Bison grammar and generalisations.
 
 Have a look at Python grammar:
